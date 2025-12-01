@@ -25,13 +25,39 @@ fn part_1(lines: &Split<&str>) -> u32 {
     count
 }
 
+fn part_2(lines: &Split<&str>) -> u32 {
+    let mut dial_position: i32 = 50;
+    let mut count: u32 = 0;
+    lines
+        .clone()
+        .for_each(|line| {
+            let movement = parse_line_part_1(line);
+            let sign = movement.signum();
+            // println!("BEFORE: movement: {movement} | sign: {sign} | dial_position: {dial_position} | count: {count}");
+            for _ in 0..movement.abs() {
+                dial_position += sign;
+                dial_position += 100;
+                dial_position %= 100;
+                // println!("\tclick: {sign} | dial_position: {dial_position}");
+                if(dial_position == 0) {
+                    count += 1;
+                }
+            }
+            // println!("AFTER: movement: {movement} | sign: {sign} | dial_position: {dial_position} | count: {count}");
+        });
+    count
+}
+
 fn main() {
     let text_file_string = read_to_string("./day_01/input.txt").expect("It was supposed to work");
     let sample_input = text_file_string.trim().split("\n");
     let part_1_result = part_1(&sample_input);
     println!("WHAT IS part_1_result?? {part_1_result}");
+    let part_2_result = part_2(&sample_input);
+    println!("WHAT IS part_2_result?? {part_2_result}");
     /*
        WHAT IS part_1_result?? 1165
+       WHAT IS part_2_result?? 6496
     */
 }
 
@@ -56,6 +82,13 @@ mod tests {
         let sample_input = text_file_string.trim().split("\n");
         let part_1_result = part_1(&sample_input);
         assert_eq!(part_1_result, 3);
+    }
+    #[test]
+    fn part_2_test() {
+        let text_file_string = read_to_string("./input_sample.txt").unwrap();
+        let sample_input = text_file_string.trim().split("\n");
+        let part_2_result = part_2(&sample_input);
+        assert_eq!(part_2_result, 6);
     }
 
 }
